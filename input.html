@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/select2.css" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/select2.min.js"></script>
+<title>PIT WEB MOCK</title>
+</head>
+<body>
+  <form id="form1" name="form1" action="./output.html" method="get">
+    <table>
+      <tr>
+        <th>バイヤコード：</th>
+        <td>
+          <select id="buyerCode" onchange="selectBuyerCode(this)" class="select" style="width:200px;">
+　　　　　　　　　　<option value="">バイヤーコード</option>
+　　　　　　　　</select>
+        </td>
+        <th id="sup_th" style="display:none;">サプライヤコード：</th>
+        <td id="sup_td" style="display:none;">
+          <select id="supplyerCode" style="width:200px;">
+　　　　　　　　　　<option value="">サプライヤコード</option>
+　　　　　　　　</select>
+        </td>
+      </tr>
+    </table>
+    <p><input type="submit" value="Submit"></p>
+  </form>
+  
+  <script type="text/javascript" language="JavaScript">
+    
+    // 戻るボタンが押された時の画面リセット
+    window.onpageshow = function(){
+      $('#form1').reset();
+    };
+    
+    // 検索欄付きセレクトボックスのプラグイン
+    $(function(){
+      $('.select').select2();
+    });
+    
+    // バイヤーコードの定義
+    var buyerCodeList = new Array("AAAAAA","BBBBBB","CCCCCC","DDDDDD","あああああ");
+    
+    // サプライヤコードの定義
+    var supplyerCodeList = new Array();
+    supplyerCodeList["AAAAAA"] = new Array("aaaaa","bbbbb","ccccc");
+    supplyerCodeList["BBBBBB"] = new Array("ddddd","eeeee","fffff");
+    supplyerCodeList["CCCCCC"] = new Array("ggggg","hhhhh","iiiii");
+    
+    // バイヤーコードのリスト生成
+    //$("#buyerCode option[value='']").remove();
+    createSelection(form1.elements['buyerCode'], "以下から選択", buyerCodeList, buyerCodeList);
+    
+    // 選択ボックスに選択肢を追加する関数
+    function addSelOption(selObj, myValue, myText){
+      selObj.length++;
+      selObj.options[selObj.length - 1].value = myValue;
+      selObj.options[selObj.length - 1].text  = myText;
+    }
+    
+    // 選択リストを作る関数 
+    function createSelection(selObj, midashi, aryValue, aryText){
+      selObj.length = 0;
+      addSelOption(selObj, midashi, midashi);
+      // 初期化
+      for( var i=0; i < aryValue.length; i++){
+        addSelOption (selObj, aryValue[i], aryText[i]);
+      }
+    }
+    
+    // バイヤーコードが選択されたときに呼び出される関数
+    function selectBuyerCode(obj){
+      // サプライヤー選択の表示、非表示
+      if ($('#buyerCode').prop("selectedIndex") == 0){
+    	$('#sup_th').css('display','none');
+        $('#sup_td').css('display','none');
+      } else {
+    	$('#sup_th').css('display','');
+        $('#sup_td').css('display','');
+        $(function(){
+          $('#supplyerCode').select2();
+        });
+    	createSelection(form1.elements['supplyerCode'], "以下から選択", 
+    			supplyerCodeList[obj.value], supplyerCodeList[obj.value]);
+    	$("#supplyerCode option:first").prop('disabled', 'disabled');
+      }
+    }
+    
+  </script>
+</body>
+</html>
